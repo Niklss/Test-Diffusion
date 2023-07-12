@@ -1,0 +1,24 @@
+version: '3.3'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: api-Dockerfile
+    image: dif-api
+    container_name: dif-api
+    command: "uvicorn --reload --host 0.0.0.0 --port 8000 main:app"
+    env_file:
+      - ./apps.env
+    ports:
+      - "8000:8000"
+
+  diffusion:
+    build:
+      context: .
+      dockerfile: dif-Dockerfile
+    image: diffusion
+    container_name: diffusion
+    command: "python main.py"
+    env_file:
+      - ./apps.env

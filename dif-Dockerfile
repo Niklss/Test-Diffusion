@@ -1,0 +1,21 @@
+FROM nvidia/cuda:11.7.1-runtime-ubuntu22.04
+ARG PYTHON_VERSION=3.9
+
+ENV PYTHONUNBUFFERED=1
+
+WORKDIR /opt/workspace
+RUN apt-get update -y
+RUN apt-get install -y python3-pip
+
+RUN pip3 install --upgrade pip
+
+COPY diffusion/requirements.txt requirements.txt
+RUN pip3 install torch torchvision
+RUN pip3 install -r requirements.txt --no-cache-dir
+
+ENV TZ Europe/Moscow
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+COPY common ./common
+COPY diffusion .
+COPY model_names.txt .
